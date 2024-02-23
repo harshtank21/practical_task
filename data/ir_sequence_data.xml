@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_model" model="ir.sequence">
+        <field name="name">Sale order</field>
+        <field name="code">my.sequence.for.sale</field>
+        <field name="prefix">QU</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="sale_orders_view_inherit">
+        <field name="name">sale.order.view.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+<!--            <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">-->
+<!--                <button name="%(sale_order_wizard_action_window)d" string="Show History" type="action"-->
+<!--                        class="oe_highlight"/>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="approvers" widget="many2many_tags"
+                       groups="practical_task.group_order_approval_of_car_rental" default="user_id"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="number"  />
+            </xpath>
+            <xpath expr="/form/header/field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,sent,approval_requested,approved,sale"/>
+            </xpath>
+            <xpath expr="/form/header/button[@name='action_confirm']" position="after">
+                <!--                <button name="action_approval_requested" states="draft" string="Approval Requested" class="oe_highlight"-->
+                <!--                        type="object"/>-->
+                <button name="action_approval_requested" states="draft" string="Approval Requested" class="oe_highlight"
+                        type="object"/>
+            </xpath>
+            <xpath expr="/form/header/button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', 'not in', ['approved'])]}</attribute>
+            </xpath>
+            <xpath expr="/form/header/button[@name='action_confirm']" position="after">
+                <button name="action_approval" states="approval_requested" string="Approval" class="oe_highlight"
+                        type="object" groups="practical_task.group_order_approval_of_car_rental"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="sale_search_view_edit" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Approval Requested" name="approval_requested"
+                        domain="[('state' ,'=','approval_requested')]"/>
+                <filter string="Approval" name="approval" domain="[('state' ,'=','approved')]"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_approval_requested_form" model="ir.actions.act_window">
+        <field name="name">Approval Requested</field>
+        <field name="res_model">sale.order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','approval_requested')]</field>
+    </record>
+    <menuitem id="approval_requested"
+              name="Approval Requested"
+              parent="sale.sale_order_menu"
+              action="action_approval_requested_form"
+              groups="practical_task.group_order_approval_of_car_rental"
+              sequence="15"/>
+</odoo>

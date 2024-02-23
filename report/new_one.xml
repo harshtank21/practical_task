@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_sale_new_one_document">
+        <div t-attf-class="header o_company_#{doc.name}_layout">
+            <div class="o_odooistic_header">
+                <div class="address">
+                    <t>Hertz Global Pvt.Ltd</t>
+                    <t>Report</t>
+                    <br/>
+                    <td>Your Bill
+                        <br/>
+                        Godal chokdi
+                        <br/>
+                        Hertz Global,Rajkot
+                        <br/>
+                        pin,256045
+                    </td>
+                </div>
+            </div>
+        </div>
+
+        <div t-attf-class="footer o_company_#{doc.name}_layout">
+            <div class="o_odooistic_footer">
+                <div class="row1">
+                    <t>Report</t>
+                    <br/>
+                    <t>Hertz Global Pvt.Ltd</t>
+                </div>
+            </div>
+        </div>
+    </template>
+    <!--    <template id="report_saleorder">-->
+    <!--        <t t-call="web.html_container">-->
+    <!--            <t t-foreach="docs" t-as="doc">-->
+    <!--                <t t-call="sale.report_saleorder_document" t-lang="doc.partner_id.lang"/>-->
+    <!--            </t>-->
+    <!--        </t>-->
+    <!--    </template>-->
+    <template id="description_new_one_document_inherit" inherit_id="sale.report_saleorder">
+        <xpath expr="//t[@t-foreach='docs']" position="inside">
+            <t t-if="doc.sale_bool" t-call="session_task.report_sale_new_one_document" t-lang="doc.partner_id.lang"/>
+        </xpath>
+        <xpath expr="//t[@t-call='sale.report_saleorder_document']" position="attributes">
+            <attribute name="t-if">doc.sale_bool != True</attribute>
+        </xpath>
+    </template>
+</odoo>
